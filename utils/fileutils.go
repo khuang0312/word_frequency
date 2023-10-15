@@ -7,89 +7,121 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"reflect"
 	"slices"
 	"strconv"
-	"strings"
 )
 
-func DownloadFile(url string, filepath string) error {
-	// Get the data
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	// Create the file
-	out, err := os.Create(filepath)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	// Write the body to file
-	_, err = io.Copy(out, resp.Body)
-
-	fmt.Println("Downloaded: " + filepath)
-
-	return err
+type TextFile struct {
+	url              string
+	tmpFilename      string
+	wordFrequencyMap map[string]int
 }
 
-func RemoveFile(filename string) error {
-	err := os.Remove(filename)
+func NewTextFile(url string) *TextFile {
+	tf := new(TextFile)
+	tf.url = url
+	tf.wordFrequencyMap = make(map[string]int)
+	return tf
+}
+
+// we want to read from this file object after...
+func (tf *TextFile) DownloadFile() error {
+	resp, err := http.Get(tf.url)
+	defer resp.Body.Close()
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Removed " + filename)
+	// because we'll just be deleting this soon anyways
+	out, err := os.CreateTemp("", "")
+	defer out.Close()
+	if err != nil {
+		return err
+	}
+
+	// save file name to access later
+	tf.tmpFilename = out.Name()
+
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func GetWordFrequencyMap(filepath string) (map[string]int, error) {
-	file, err := os.Open(filepath)
+func (tf *TextFile) RemoveFile() error {
+	err := os.Remove(tf.tmpFilename)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer file.Close()
 
-	frequencyMap := map[string]int{}
+	// fmt.Println("Removed " + tf.tmpFilename)
+	return nil
+}
 
-	scanner := bufio.NewScanner(file)
+func (tf *TextFile) PopulateWordFrequencyMap() error {
+	reader, err := os.Open(tf.tmpFilename)
+	defer reader.Close()
+	if err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		line := scanner.Text()
 		tokens := Tokenize(line)
 		for _, t := range tokens {
-			frequencyMap[t] += 1
+			tf.wordFrequencyMap[t] += 1
 		}
 	}
+
+	// if scanner.Scan() errors, we break out of loop
 	if scanner.Err() != nil {
-		return nil, scanner.Err()
+		return scanner.Err()
 	}
-	fmt.Println(filepath, len(frequencyMap))
-	return frequencyMap, nil
+	// fmt.Println(tf.url, len(tf.wordFrequencyMap))
+	return nil
 }
 
-func GetSortedRecordsFromFrequencyMap(frequencyMap map[string]int) [][]string {
-	// no good way to iterate through maps in a sorted order as of this time
-	words := reflect.ValueOf(frequencyMap).MapKeys()
-	slices.SortFunc(words, func(a, b reflect.Value) int {
-		return strings.Compare(a.String(), b.String())
-	})
+func (tf *TextFile) GetSortedRecords() [][]string {
+	// reflect just becomes too confusing and hard to read
+	// didn't want to write a loop just to iterate through a map
+	words := []string{}
+	for key, _ := range tf.wordFrequencyMap {
+		words = append(words, key)
+	}
+	slices.Sort(words)
 
 	records := [][]string{}
 	for _, w := range words {
-		word := w.String()
-
-		records = append(records, []string{word, strconv.Itoa(frequencyMap[word])})
+		records = append(records, []string{w, strconv.Itoa(tf.wordFrequencyMap[w])})
 	}
 
 	return records
 }
 
-func WriteToCSV(filename string, records [][]string) error {
+func (tf *TextFile) GetCSVFilename() (string, error) {
+	filename, err := PathToFilename(tf.url)
+	if err != nil {
+		return "", err
+	}
 
-	f, err := os.Create(filename)
+	filename = FilenameToPrefix(filename)
+	filename = fmt.Sprintf("%s.csv", filename)
+	return filename, nil
+}
+
+// this isn't a method because this is generalizable beyond TextFiles
+func WriteToCSV(filename string, records [][]string) error {
+	// 660 is rw for user and groups
+	err := os.Mkdir("output", 660)
+	if err != nil && !os.IsExist(err) {
+		return err
+	}
+
+	// truncates existing files by default
+	f, err := os.Create("output/" + filename)
 	if err != nil {
 		return err
 	}
@@ -104,6 +136,6 @@ func WriteToCSV(filename string, records [][]string) error {
 	for _, record := range records {
 		w.Write(record)
 	}
-	
+
 	return err
 }

@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"gotest.tools/v3/assert"
 	"testing"
-	"fmt"
 )
 
 func TestTokenizeDoesDistinguishCapitalization(t *testing.T) {
@@ -36,47 +36,62 @@ func TestTokenizeIgnoresPunctuation(t *testing.T) {
 	assert.DeepEqual(t, result, expected)
 }
 
-func TestPathToFileNameWithURL(t *testing.T) {
+func TestPathToFilenameWithURL(t *testing.T) {
 	url := "https://norvig.com/big.txt"
-	result, _ := PathToFileName(url)
+	result, _ := PathToFilename(url)
 	assert.Equal(t, result, "big.txt")
 }
 
-func TestPathToFileNameWithRootURL(t *testing.T) {
+func TestPathToFilenameWithRootURL(t *testing.T) {
 	url := "https://norvig.com/"
-	result, _ := PathToFileName(url)
+	result, _ := PathToFilename(url)
 	assert.Equal(t, result, "")
 }
 
-func TestPathToFileNameWithLinuxFilePath(t *testing.T) {
+func TestPathToFilenameWithLinuxFilePath(t *testing.T) {
 	path := "/big.txt"
-	result, _ := PathToFileName(path)
+	result, _ := PathToFilename(path)
 	assert.Equal(t, result, "big.txt")
 }
 
-func TestPathToFileNameWithWindowsFilePath(t *testing.T) {
+func TestPathToFilenameWithWindowsFilePath(t *testing.T) {
 	path := "C:Projects\\apilibrary\\apilibrary.sln"
-	result, _ := PathToFileName(path)
+	result, _ := PathToFilename(path)
 	assert.Equal(t, result, "apilibrary.sln")
 }
 
-func TestPathToFileNameWithoutSlashOrBackSlash(t *testing.T) {
+func TestPathToFilenameWithoutSlashOrBackSlash(t *testing.T) {
 	path := "fail"
-	_, err := PathToFileName(path)
+	_, err := PathToFilename(path)
 	assert.Error(t, err, fmt.Sprintf("Path '%s' is not a valid filepath or URL", path))
 }
 
-func TestFileNameToSuffixWithOneDot(t *testing.T) {
+func TestFilenameToSuffixWithOneDot(t *testing.T) {
 	filename := "x.csv"
 	assert.Equal(t, FilenameToSuffix(filename), "csv")
 }
 
-func TestFileNameToSuffixWithTwoDots(t *testing.T) {
+func TestFilenameToSuffixWithTwoDots(t *testing.T) {
 	filename := "x.tar.gz"
 	assert.Equal(t, FilenameToSuffix(filename), "tar.gz")
 }
 
-func TestFileNameToSuffixWithoutPeriod(t *testing.T) {
+func TestFilenameToSuffixWithoutPeriod(t *testing.T) {
 	filename := "xcsv"
 	assert.Equal(t, FilenameToSuffix(filename), "")
+}
+
+func TestFilenameToPrefixWithOneDot(t *testing.T) {
+	filename := "x.csv"
+	assert.Equal(t, FilenameToPrefix(filename), "x")
+}
+
+func TestFilenameToPrefixWithTwoDots(t *testing.T) {
+	filename := "x.tar.gz"
+	assert.Equal(t, FilenameToPrefix(filename), "x")
+}
+
+func TestFilenameToPrefixWithoutPeriod(t *testing.T) {
+	filename := "xcsv"
+	assert.Equal(t, FilenameToPrefix(filename), "xcsv")
 }

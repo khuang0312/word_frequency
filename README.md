@@ -88,6 +88,9 @@ https://www.reddit.com/r/golang/comments/seg2sx/recommended_frameworklibrary_for
 File upload
 https://freshman.tech/file-upload-golang/
 
+CHMOD perms
+https://chmodcommand.com/chmod-660/
+
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
@@ -95,11 +98,21 @@ docker build --rm -t go_image:alpha .
 
 docker run -d -it --name go-docker-app --mount type=bind,source="$(pwd)",target=/app go_image:alpha
 
+go test -bench=. -count 5 -run=^#
+
 
 TODO
-- rewrite using structs?
-- use ErrorGroup for error handling
-- redo benchmarks
-- test fileutils
-- use temporary files
+- cleanup README
+- add unit tests or integration tests for fileutils
+- add logging using Zap, slog, or Golang log
+- add Jenkins?
+- make a GRPC API?
+- make a CLI?
+
+
 - use a porter stemmer? (not important)
+
+
+In future (Because these are still experimental)
+- Use ErrorGroup
+- Use maps.Keys

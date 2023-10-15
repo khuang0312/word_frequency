@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
-	"fmt"
 )
 
 func Tokenize(line string) []string {
@@ -17,17 +17,17 @@ func Tokenize(line string) []string {
 	return regexp.MustCompile(`[[:alpha:]]+(['])?[[:alpha:]]+`).FindAllString(line, -1)
 }
 
-
-func PathToFileName(path string) (string, error) {
+// so we don't have to store a mapping of URLs to their file names
+func PathToFilename(path string) (string, error) {
 	// make sure that we get the last slash or backslash
 	lastSlashIndex := -1
-	if (strings.LastIndex(path, "/") != -1) {
+	if strings.LastIndex(path, "/") != -1 {
 		lastSlashIndex = strings.LastIndex(path, "/")
-	} else if (strings.LastIndex(path, "\\") != -1 ) {
+	} else if strings.LastIndex(path, "\\") != -1 {
 		lastSlashIndex = strings.LastIndex(path, "\\")
 	}
-	
-	if (lastSlashIndex == -1) {
+
+	if lastSlashIndex == -1 {
 		return "", fmt.Errorf("Path '%s' is not a valid filepath or URL", path)
 	}
 
@@ -35,7 +35,13 @@ func PathToFileName(path string) (string, error) {
 	return filename, nil
 }
 
+// so we can quickly check whether we can parse a file
 func FilenameToSuffix(filename string) string {
 	_, after, _ := strings.Cut(filename, ".")
 	return after
+}
+
+func FilenameToPrefix(filename string) string {
+	before, _, _ := strings.Cut(filename, ".")
+	return before
 }
