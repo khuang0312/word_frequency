@@ -10,6 +10,23 @@ import (
 	"regexp"
 )
 
+var links = map[string]string{
+	"https://norvig.com/big.txt": "big.txt",
+	"https://bereanbible.com/bsb.txt": "bsb.txt",
+	"https://readersbible.com/brb.txt": "brb.txt",
+	"https://openbible.com/textfiles/asv.txt": "asv.txt",
+	"https://openbible.com/textfiles/akjv.txt" : "akjv.txt",
+	"https://openbible.com/textfiles/cpdv.txt": "cpdv.txt",
+	"https://openbible.com/textfiles/dbt.txt": "dbt.txt",
+	"https://openbible.com/textfiles/drb.txt": "drb.txt",
+	"https://openbible.com/textfiles/erv.txt": "erv.txt",
+	"https://openbible.com/textfiles/jps.txt": "jps.txt",
+	"https://openbible.com/textfiles/kjv.txt": "kjv.txt",
+	"https://openbible.com/textfiles/slt.txt": "slt.txt",
+	"https://openbible.com/textfiles/wbt.txt": "wbt.txt",
+	"https://openbible.com/textfiles/web.txt": "web.txt",
+	"https://openbible.com/textfiles/ylt.txt": "ylt.txt",
+}
 
 func Tokenize(line string) []string {
 	// not planning on distinguishing case
@@ -49,36 +66,30 @@ func ReadFile(filepath string) error {
     }
 	defer file.Close();
 
+	frequencyDict := map[string]int{}
+
+
 	scanner := bufio.NewScanner(file)
     for scanner.Scan() {
         line := scanner.Text()
-		lineStrings := strings.Fields(line)
-		fmt.Println(lineStrings)
+		tokens:= Tokenize(line)
+		
+		for _, t := range tokens {
+			fmt.Println(t)
+			frequencyDict[t] += 1
+			
+		}
+		
 		
     }
+	fmt.Println(frequencyDict)
     return scanner.Err()
 
 }
 
 
 func main() {
-	links := map[string]string{
-		"https://norvig.com/big.txt": "big.txt",
-		"https://bereanbible.com/bsb.txt": "bsb.txt",
-		"https://readersbible.com/brb.txt": "brb.txt",
-		"https://openbible.com/textfiles/asv.txt": "asv.txt",
-		"https://openbible.com/textfiles/akjv.txt" : "akjv.txt",
-		"https://openbible.com/textfiles/cpdv.txt": "cpdv.txt",
-		"https://openbible.com/textfiles/dbt.txt": "dbt.txt",
-		"https://openbible.com/textfiles/drb.txt": "drb.txt",
-		"https://openbible.com/textfiles/erv.txt": "erv.txt",
-		"https://openbible.com/textfiles/jps.txt": "jps.txt",
-		"https://openbible.com/textfiles/kjv.txt": "kjv.txt",
-		"https://openbible.com/textfiles/slt.txt": "slt.txt",
-		"https://openbible.com/textfiles/wbt.txt": "wbt.txt",
-		"https://openbible.com/textfiles/web.txt": "web.txt",
-		"https://openbible.com/textfiles/ylt.txt": "ylt.txt",
-	}
+	
 
 	for url, fileName := range links {
         fmt.Println(url, fileName)
@@ -89,6 +100,7 @@ func main() {
 		}
 		fmt.Println("Downloaded: " + fileName)
 		ReadFile(fileName)
+		break;
 		
     }
 }
