@@ -1,9 +1,9 @@
-package main
+package utils
 
 import (
-	"testing"
 	"gotest.tools/v3/assert"
 	"reflect" // needed for deepEqual
+	"testing"
 )
 
 func TestTokenizeDoesDistinguishCapitalization(t *testing.T) {
@@ -35,5 +35,3 @@ func TestTokenizeIgnoresPunctuation(t *testing.T) {
 	expected := []string{"sam", "this", "is", "not", "me"}
 	assert.Assert(t, reflect.DeepEqual(result, expected))
 }
-
-

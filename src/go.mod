@@ -1,6 +1,6 @@
-module github.com/scraper
+module github.com/khuang0312/scraper
 
-go 1.19
+go 1.21
 
 require gotest.tools/v3 v3.5.1
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"testing"
 	"os"
+	"testing"
 )
 
 func setup() {
@@ -12,7 +12,7 @@ func setup() {
 		if err != nil {
 			panic(err)
 		}
-    }
+	}
 }
 
 func teardown() {
@@ -22,19 +22,17 @@ func teardown() {
 		if err != nil {
 			panic(err)
 		}
-    }
+	}
 }
-
-
 
 func BenchmarkGetWordFrequencyPerFile(b *testing.B) {
 	for _, filename := range Links {
-        b.Run(filename, func(b *testing.B) {
-            for i := 0; i < b.N; i++ {
+		b.Run(filename, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
 				GetWordFrequency(filename)
-            }
-        })
-    }
+			}
+		})
+	}
 }
 
 // func BenchmarkGetWordFrequencyForAllFiles(b *testing.B) {
@@ -43,10 +41,9 @@ func BenchmarkGetWordFrequencyPerFile(b *testing.B) {
 //     }
 // }
 
-
 func TestMain(m *testing.M) {
 	setup()
-    code := m.Run()
+	code := m.Run()
 	teardown()
-    os.Exit(code)
+	os.Exit(code)
 }

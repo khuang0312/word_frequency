@@ -59,6 +59,18 @@ https://blog.logrocket.com/benchmarking-golang-improve-function-performance/
 Concurrent programming
 https://www.freecodecamp.org/news/concurrent-programming-in-go/
 https://golangbot.com/goroutines/
+https://gobyexample.com/waitgroups
+
+Error handling
+https://earthly.dev/blog/golang-errors/
+https://preslav.me/2023/04/14/golang-error-handling-is-a-form-of-storytelling/
+
+Package naming
+https://go.dev/doc/effective_go#package-names
+https://stackoverflow.com/questions/61845013/package-xxx-is-not-in-goroot-when-building-a-go-project
+
+Iterating through map in order
+https://stackoverflow.com/questions/37695209/golang-sort-slice-ascending-or-descending
 
 
 Commands
@@ -73,6 +85,7 @@ TODO
 - use ErrorGroup for error handling
 - use temporary files
 - figure out way to change output
+- write to CSV
 
 
 
