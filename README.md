@@ -54,6 +54,12 @@ https://stackoverflow.com/questions/23729790/how-can-i-do-test-setup-using-the-t
 
 Using Subtests and Sub-benchmarks
 https://go.dev/blog/subtests
+https://blog.logrocket.com/benchmarking-golang-improve-function-performance/
+
+Concurrent programming
+https://www.freecodecamp.org/news/concurrent-programming-in-go/
+https://golangbot.com/goroutines/
+
 
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
@@ -63,3 +69,11 @@ docker build --rm -t go_image:alpha .
 docker run -d -it --name go-docker-app --mount type=bind,source="$(pwd)"/src,target=/app go_image:alpha
 
 
+TODO
+- use ErrorGroup for error handling
+- use temporary files
+- figure out way to change output
+
+
+
+- use a porter stemmer? (not important)

@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"strings"
 	"regexp"
+	"sync"
 )
 
 var Links = map[string]string{
@@ -56,6 +57,9 @@ func DownloadFile(url string, filepath string) error {
 
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)
+
+	fmt.Println("Downloaded: " + filepath)
+
 	return err
 }
 
@@ -79,24 +83,45 @@ func GetWordFrequency(filepath string) (error, map[string]int) {
 	if scanner.Err() != nil {
 		return scanner.Err(), nil
 	}
-
+	fmt.Println(filepath, len(frequencyDict))
 	return nil, frequencyDict
 }
 
-
-func main() {
+func RemoveFile(filename string) error {
+	err := os.Remove(filename)
+	if err != nil {
+		return err
+	}
 	
+	fmt.Println("Removed " + filename)
+	return nil
+}
 
+func f() {
 	for url, filename := range Links {
-        fmt.Println(url, filename)
-
 		err := DownloadFile(url, filename)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("Downloaded: " + filename)
-		fmt.Println(GetWordFrequency(filename))
-		break;
-		
+		GetWordFrequency(filename)	
     }
+}
+
+func main() {
+
+
+	var wg sync.WaitGroup
+
+	for url, filename := range Links {
+		wg.Add(1)
+
+		// we need params so goroutine won't end up using same value
+		go func(url string, filename string) {
+			defer wg.Done()
+			DownloadFile(url, filename)
+			GetWordFrequency(filename)
+			RemoveFile(filename)
+		}(url, filename)
+	}
+	wg.Wait()
 }
