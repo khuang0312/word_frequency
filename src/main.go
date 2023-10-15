@@ -10,7 +10,7 @@ import (
 	"regexp"
 )
 
-var links = map[string]string{
+var Links = map[string]string{
 	"https://norvig.com/big.txt": "big.txt",
 	"https://bereanbible.com/bsb.txt": "bsb.txt",
 	"https://readersbible.com/brb.txt": "brb.txt",
@@ -39,7 +39,7 @@ func Tokenize(line string) []string {
 	return regexp.MustCompile(`[[:alpha:]]+(['])?[[:alpha:]]+`).FindAllString(line, -1)
 }
 
-func DownloadFile(url string, filepath string, ) error {
+func DownloadFile(url string, filepath string) error {
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
@@ -59,47 +59,43 @@ func DownloadFile(url string, filepath string, ) error {
 	return err
 }
 
-func ReadFile(filepath string) error {
+func GetWordFrequency(filepath string) (error, map[string]int) {
 	file, err := os.Open(filepath)
 	if err != nil {
-        return err
+        return err, nil
     }
 	defer file.Close();
 
 	frequencyDict := map[string]int{}
 
-
 	scanner := bufio.NewScanner(file)
     for scanner.Scan() {
         line := scanner.Text()
 		tokens:= Tokenize(line)
-		
 		for _, t := range tokens {
-			fmt.Println(t)
 			frequencyDict[t] += 1
-			
-		}
-		
-		
+		}	
     }
-	fmt.Println(frequencyDict)
-    return scanner.Err()
+	if scanner.Err() != nil {
+		return scanner.Err(), nil
+	}
 
+	return nil, frequencyDict
 }
 
 
 func main() {
 	
 
-	for url, fileName := range links {
-        fmt.Println(url, fileName)
+	for url, filename := range Links {
+        fmt.Println(url, filename)
 
-		err := DownloadFile(url, fileName)
+		err := DownloadFile(url, filename)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("Downloaded: " + fileName)
-		ReadFile(fileName)
+		fmt.Println("Downloaded: " + filename)
+		fmt.Println(GetWordFrequency(filename))
 		break;
 		
     }

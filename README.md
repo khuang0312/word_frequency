@@ -39,6 +39,22 @@ https://www.alexedwards.net/blog/an-introduction-to-packages-imports-and-modules
 Capitalization case
 https://nlp.stanford.edu/IR-book/html/htmledition/capitalizationcase-folding-1.html
 
+Error handling
+https://earthly.dev/blog/golang-errors/
+https://go.dev/blog/defer-panic-and-recover
+
+Returning multiple values
+https://gobyexample.com/multiple-return-values
+
+Testing in Go
+https://blog.jetbrains.com/go/2022/11/22/comprehensive-guide-to-testing-in-go/#the-testify-package
+
+Test setup in Go
+https://stackoverflow.com/questions/23729790/how-can-i-do-test-setup-using-the-testing-package-in-go
+
+Using Subtests and Sub-benchmarks
+https://go.dev/blog/subtests
+
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
