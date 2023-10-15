@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/khuang0312/word_frequency/textsource"
 	"github.com/khuang0312/word_frequency/utils"
+	"io"
+	"os"
 	"sync"
 )
 
@@ -23,37 +26,33 @@ var Links = []string{
 	"https://openbible.com/textfiles/ylt.txt",
 }
 
-func CountWordFrequency(url string) {
-	tf := utils.NewTextFile(url)
-	err := tf.DownloadFile()
-	if err != nil {
-		panic(err)
-	}
+func CountWordFrequency(r io.Reader) [][]string {
+	ts := textsource.NewTextSource(r)
+	records := ts.GetSortedRecords()
+	return records
+}
 
-	err = tf.PopulateWordFrequencyMap()
+func processFile(p string) (string, [][]string) {
+	f, err := utils.OpenFile(p)
 	if err != nil {
-		panic(err)
+		// log error
 	}
-
-	// we don't need the file anymore
-	err = tf.RemoveFile()
-	if err != nil {
-		panic(err)
-	}
-
-	records := tf.GetSortedRecords()
-	filename, err := tf.GetCSVFilename()
-	if err != nil {
-		panic(err)
-	}
-
-	utils.WriteToCSV(filename, records)
+	defer f.Close()
+	tmpFilename := f.Name()
+	records := CountWordFrequency(f)
+	return tmpFilename, records
 }
 
 func IterativeVersion() {
 	for _, url := range Links {
-		CountWordFrequency(url)
+		tmpFilename, records := processFile(url)
+		utils.WriteToCSV(utils.GetFilename(url), records)
+		err := os.Remove(tmpFilename)
+		if err != nil {
+			// log error
+		}
 	}
+
 }
 
 func ConcurrentVersion() {
@@ -61,15 +60,34 @@ func ConcurrentVersion() {
 	for _, url := range Links {
 		wg.Add(1)
 		// we need params so goroutine won't end up using same value
-		go func(url string) {
+		go func(path string) {
 			defer wg.Done()
-			CountWordFrequency(url)
+			tmpFilename, records := processFile(url)
+			utils.WriteToCSV(utils.GetFilename(url), records)
+			err := os.Remove(tmpFilename)
+			if err != nil {
+				// log error
+			}
 		}(url)
 	}
 	wg.Wait()
 }
 
 func main() {
-	IterativeVersion()
+	// IterativeVersion()
 	ConcurrentVersion()
+
+	utils.CleanupOutputData()
+
+	// download file as temporary file (optional)
+	// we download if given an url
+	// otherwise check if it exists
+
+	// make textsource from existing file
+	// populating the word frequency map
+	// get sorted records
+	// write it to output
+
+	// deleting all temporary files created
+
 }

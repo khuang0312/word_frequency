@@ -1,16 +1,13 @@
 package main
 
 import (
+	"github.com/khuang0312/word_frequency/utils"
 	"os"
 	"testing"
 )
 
 func teardown() {
-	// remove all the files
-	err := os.RemoveAll("output")
-	if err != nil {
-		panic(err)
-	}
+	utils.CleanupOutputData()
 }
 
 func BenchmarkIterativeVersion(b *testing.B) {

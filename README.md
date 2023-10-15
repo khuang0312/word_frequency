@@ -91,6 +91,12 @@ https://freshman.tech/file-upload-golang/
 CHMOD perms
 https://chmodcommand.com/chmod-660/
 
+URL validation
+https://stackoverflow.com/questions/31480710/validate-url-with-standard-package-in-go
+
+Defers
+https://www.joeshaw.org/dont-defer-close-on-writable-files/
+
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
@@ -104,9 +110,10 @@ go test -bench=. -count 5 -run=^#
 TODO
 - cleanup README
 - add unit tests or integration tests for fileutils
+- getting benchmarking to display in friendlier units
 - add logging using Zap, slog, or Golang log
 - add Jenkins?
-- make a GRPC API?
+- make a REST API?
 - make a CLI?
 
 
@@ -116,3 +123,6 @@ TODO
 In future (Because these are still experimental)
 - Use ErrorGroup
 - Use maps.Keys
+
+
+No GRPC -> because protobuffs aren't ideal for sending large message sizes ( > 1MB)
