@@ -35,6 +35,7 @@ https://stackoverflow.cohm/questions/11867348/concurrent-reading-of-a-file-java-
 
 Packages Go
 https://www.alexedwards.net/blog/an-introduction-to-packages-imports-and-modules
+https://stackoverflow.com/questions/55442878/organize-local-code-in-packages-using-go-modules
 
 Capitalization case
 https://nlp.stanford.edu/IR-book/html/htmledition/capitalizationcase-folding-1.html
@@ -72,13 +73,15 @@ https://stackoverflow.com/questions/61845013/package-xxx-is-not-in-goroot-when-b
 Iterating through map in order
 https://stackoverflow.com/questions/37695209/golang-sort-slice-ascending-or-descending
 
+Cannot kill docker container
+https://javahowtos.com/guides/124-docker/414-solved-cannot-kill-docker-container-permission-denied.html
 
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
 docker build --rm -t go_image:alpha .
 
-docker run -d -it --name go-docker-app --mount type=bind,source="$(pwd)"/src,target=/app go_image:alpha
+docker run -d -it --name go-docker-app --mount type=bind,source="$(pwd)",target=/app go_image:alpha
 
 
 TODO

@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"reflect"
 	"slices"
 	"strconv"
 	"strings"
@@ -71,17 +72,17 @@ func GetWordFrequencyMap(filepath string) (map[string]int, error) {
 
 func GetSortedRecordsFromFrequencyMap(frequencyMap map[string]int) [][]string {
 	// no good way to iterate through maps in a sorted order as of this time
-	records := [][]string{
-		{"word", "number"},
-	}
-
-	for word, frequency := range frequencyMap {
-		append(records, []string{word, strconv.Itoa(frequency)})
-	}
-
-	slices.SortFunc(records, func(a, b []string) int {
-		return cmp.Compare(strings.ToLower(a[0]), strings.ToLower(b[0]))
+	words := reflect.ValueOf(frequencyMap).MapKeys()
+	slices.SortFunc(words, func(a, b reflect.Value) int {
+		return strings.Compare(a.String(), b.String())
 	})
+
+	records := [][]string{}
+	for _, w := range words {
+		word := w.String()
+
+		records = append(records, []string{word, strconv.Itoa(frequencyMap[word])})
+	}
 
 	return records
 }
@@ -94,8 +95,8 @@ func WriteToCSV(csvName string, records [][]string) error {
 	defer f.Close()
 
 	w := csv.NewWriter(f)
-	for r := range records {
-		if err = w.Write(r); err != nil {
+	for i, _ := range records {
+		if err = w.Write(records[i]); err != nil {
 			return err
 		}
 	}

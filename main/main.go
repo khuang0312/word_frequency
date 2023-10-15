@@ -1,12 +1,7 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	"github.com/khuang0312/scraper/utils"
-	"io"
-	"net/http"
-	"os"
 	"sync"
 )
 
@@ -34,7 +29,10 @@ func IterativeVersion() {
 		if err != nil {
 			panic(err)
 		}
-		GetWordFrequency(filename)
+		frequencyMap := GetWordFrequencyMap(filename)
+		records := GetSortedRecordsFromFrequencyMap(frequencyMap)
+		WriteToCSV(records)
+		RemoveFile(filename)
 	}
 }
 
@@ -43,14 +41,14 @@ func ConcurrentVersion() {
 
 	for url, filename := range Links {
 		wg.Add(1)
-
 		// we need params so goroutine won't end up using same value
 		go func(url string, filename string) {
 			defer wg.Done()
 			DownloadFile(url, filename)
-			WriteToCSV(GetSortedRecordsFromFrequencyMap(GetWordFrequencyMap(filename)))
+			frequencyMap := GetWordFrequencyMap(filename)
+			records := GetSortedRecordsFromFrequencyMap(frequencyMap)
+			WriteToCSV(records)
 			RemoveFile(filename)
-
 		}(url, filename)
 	}
 	wg.Wait()
