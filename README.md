@@ -76,6 +76,9 @@ https://stackoverflow.com/questions/37695209/golang-sort-slice-ascending-or-desc
 Cannot kill docker container
 https://javahowtos.com/guides/124-docker/414-solved-cannot-kill-docker-container-permission-denied.html
 
+Unit testing that is opening and reading a file
+https://stackoverflow.com/questions/56397240/unit-test-function-that-is-opening-and-reading-a-file
+
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
@@ -85,11 +88,7 @@ docker run -d -it --name go-docker-app --mount type=bind,source="$(pwd)",target=
 
 
 TODO
+- rewrite using structs?
 - use ErrorGroup for error handling
 - use temporary files
-- figure out way to change output
-- write to CSV
-
-
-
 - use a porter stemmer? (not important)

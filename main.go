@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/khuang0312/scraper/utils"
+	"github.com/khuang0312/word_frequency/utils"
 	"sync"
 )
 
@@ -25,14 +25,14 @@ var Links = map[string]string{
 
 func IterativeVersion() {
 	for url, filename := range Links {
-		err := DownloadFile(url, filename)
+		err := utils.DownloadFile(url, filename)
 		if err != nil {
 			panic(err)
 		}
-		frequencyMap := GetWordFrequencyMap(filename)
-		records := GetSortedRecordsFromFrequencyMap(frequencyMap)
-		WriteToCSV(records)
-		RemoveFile(filename)
+		frequencyMap, _ := utils.GetWordFrequencyMap(filename)
+		records := utils.GetSortedRecordsFromFrequencyMap(frequencyMap)
+		utils.WriteToCSV(filename + ".csv", records)
+		utils.RemoveFile(filename)
 	}
 }
 
@@ -44,17 +44,25 @@ func ConcurrentVersion() {
 		// we need params so goroutine won't end up using same value
 		go func(url string, filename string) {
 			defer wg.Done()
-			DownloadFile(url, filename)
-			frequencyMap := GetWordFrequencyMap(filename)
-			records := GetSortedRecordsFromFrequencyMap(frequencyMap)
-			WriteToCSV(records)
-			RemoveFile(filename)
+			utils.DownloadFile(url, filename)
+			frequencyMap, _ := utils.GetWordFrequencyMap(filename)
+			records := utils.GetSortedRecordsFromFrequencyMap(frequencyMap)
+			utils.WriteToCSV(filename + ".csv", records)
+			utils.RemoveFile(filename)
 		}(url, filename)
 	}
 	wg.Wait()
 }
 
 func main() {
+	// records := [][]string{
+	// 	{"alan", "1"},
+	// 	{"james", "12"},
+	// }
 
+	// fmt.Println(records)
+
+	// err := utils.WriteToCSV("x.csv", records)
+	
 	ConcurrentVersion()
 }

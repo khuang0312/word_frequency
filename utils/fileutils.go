@@ -87,22 +87,25 @@ func GetSortedRecordsFromFrequencyMap(frequencyMap map[string]int) [][]string {
 	return records
 }
 
-func WriteToCSV(csvName string, records [][]string) error {
-	f, err := os.Open(csvName)
+func WriteToCSV(filename string, records [][]string) error {
+
+	f, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
+	fmt.Println(records)
+
 	w := csv.NewWriter(f)
-	for i, _ := range records {
-		if err = w.Write(records[i]); err != nil {
-			return err
-		}
+	defer w.Flush()
+
+	headers := []string{"word", "count"}
+	w.Write(headers)
+
+	for _, record := range records {
+		w.Write(record)
 	}
-	w.Flush()
-	if err := w.Error(); err != nil {
-		return err
-	}
+	
 	return err
 }
