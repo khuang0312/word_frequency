@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/khuang0312/word_frequency/utils"
 	"os"
 	"testing"
 )
@@ -8,7 +9,7 @@ import (
 func setup() {
 	// download all the test files
 	for url, filename := range Links {
-		err := DownloadFile(url, filename)
+		err := utils.DownloadFile(url, filename)
 		if err != nil {
 			panic(err)
 		}
@@ -18,28 +19,24 @@ func setup() {
 func teardown() {
 	// remove all the files
 	for _, filename := range Links {
-		err := os.Remove(filename)
+		err := utils.RemoveFile(filename)
 		if err != nil {
 			panic(err)
 		}
 	}
 }
 
-func BenchmarkGetWordFrequencyPerFile(b *testing.B) {
-	for _, filename := range Links {
-		b.Run(filename, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				GetWordFrequency(filename)
-			}
-		})
+func BenchmarkIterativeVersion(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		IterativeVersion()
 	}
 }
 
-// func BenchmarkGetWordFrequencyForAllFiles(b *testing.B) {
-// 	for i := 0; i < b.N; i++ {
-//         // Parallelized version here
-//     }
-// }
+func BenchmarkConcurrentVersion(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		ConcurrentVersion()
+	}
+}
 
 func TestMain(m *testing.M) {
 	setup()

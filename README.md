@@ -79,6 +79,15 @@ https://javahowtos.com/guides/124-docker/414-solved-cannot-kill-docker-container
 Unit testing that is opening and reading a file
 https://stackoverflow.com/questions/56397240/unit-test-function-that-is-opening-and-reading-a-file
 
+Logging in Golang
+https://betterstack.com/community/guides/logging/logging-in-go/
+
+CLI apps
+https://www.reddit.com/r/golang/comments/seg2sx/recommended_frameworklibrary_for_creating_cli/
+
+File upload
+https://freshman.tech/file-upload-golang/
+
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
@@ -90,5 +99,7 @@ docker run -d -it --name go-docker-app --mount type=bind,source="$(pwd)",target=
 TODO
 - rewrite using structs?
 - use ErrorGroup for error handling
+- redo benchmarks
+- test fileutils
 - use temporary files
 - use a porter stemmer? (not important)

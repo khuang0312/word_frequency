@@ -31,7 +31,7 @@ func IterativeVersion() {
 		}
 		frequencyMap, _ := utils.GetWordFrequencyMap(filename)
 		records := utils.GetSortedRecordsFromFrequencyMap(frequencyMap)
-		utils.WriteToCSV(filename + ".csv", records)
+		utils.WriteToCSV(filename+".csv", records)
 		utils.RemoveFile(filename)
 	}
 }
@@ -47,7 +47,7 @@ func ConcurrentVersion() {
 			utils.DownloadFile(url, filename)
 			frequencyMap, _ := utils.GetWordFrequencyMap(filename)
 			records := utils.GetSortedRecordsFromFrequencyMap(frequencyMap)
-			utils.WriteToCSV(filename + ".csv", records)
+			utils.WriteToCSV(filename+".csv", records)
 			utils.RemoveFile(filename)
 		}(url, filename)
 	}
@@ -63,6 +63,6 @@ func main() {
 	// fmt.Println(records)
 
 	// err := utils.WriteToCSV("x.csv", records)
-	
+
 	ConcurrentVersion()
 }

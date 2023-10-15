@@ -95,8 +95,6 @@ func WriteToCSV(filename string, records [][]string) error {
 	}
 	defer f.Close()
 
-	fmt.Println(records)
-
 	w := csv.NewWriter(f)
 	defer w.Flush()
 
