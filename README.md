@@ -29,6 +29,16 @@ https://stackoverflow.com/questions/1450551/buffered-vs-unbuffered-io#1450563
 Create an IO Reader from file
 https://stackoverflow.com/questions/25677235/create-a-io-reader-from-a-local-file
 
+
+Concurrent reading of file?
+https://stackoverflow.cohm/questions/11867348/concurrent-reading-of-a-file-java-preferred
+
+Packages Go
+https://www.alexedwards.net/blog/an-introduction-to-packages-imports-and-modules
+
+Capitalization case
+https://nlp.stanford.edu/IR-book/html/htmledition/capitalizationcase-folding-1.html
+
 Commands
 docker build --rm -t [YOUR IMAGE NAME]:alpha .
 
